@@ -36,11 +36,11 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-20 bg-gray-50 text-gray-800">
       <header className="max-w-7xl mx-auto px-4 pt-12 pb-12">
-        <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="bg-blue-600 rounded-[3rem] p-10 md:p-20 text-white shadow-2xl relative overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-blue-600 rounded-[3rem] p-10 md:p-20 text-white shadow-2xl relative overflow-hidden">
           <div className="relative z-10">
             <span className="bg-white/20 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block">Live Inventory System</span>
-            <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6">REAL-TIME<br/>COMMERCE.</h1>
-            <p className="text-blue-100 text-lg max-w-lg mb-8 leading-relaxed">Connected to PostgreSQL. Serving local assets at lightning speed.</p>
+            <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-6">REAL-TIME COMMERCE./THE DIGITAL HUB.PREMIUM PRODUCTS.</h1>
+            <p className="text-blue-100 text-lg max-w-lg mb-8 leading-relaxed">Connected to PostgreSQL. Serving local assets at lightning speed./Order your favorite items today. Fast delivery across Tanzania directly to your doorstep.</p>
           </div>
         </motion.div>
       </header>
@@ -65,7 +65,7 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-3 rounded-2xl text-white shadow-lg"><LayoutGrid size={24}/></div>
+            <div className="bg-blue-600 p-3 rounded-2xl text-white shadow-lg"><LayoutGrid size={24} /></div>
             <h2 className="text-3xl font-black text-slate-900 tracking-tight">Active Catalog</h2>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2">
