@@ -138,7 +138,7 @@ function App() {
             {products.map((item) => (
               <div key={item.id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-xs hover:shadow-md transition-all flex flex-col group">
                 <div className="relative pt-[100%] bg-gray-50 overflow-hidden">
-                  <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-300" />
+                  <img src={item.image || item.image_url} alt={item.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-300" />
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <h3 className="font-bold text-gray-900 mb-1 tracking-tight group-hover:text-blue-600 transition-colors">{item.name}</h3>
@@ -203,7 +203,7 @@ function App() {
                 <div className="flex-grow overflow-y-auto py-4 space-y-4">
                   {cart.length === 0 ? <p className="text-center py-10 text-gray-400 text-sm">Your bag is empty.</p> : cart.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-4 border-b pb-4">
-                      <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-xl" />
+                      <img src={item.image || item.image_url} alt={item.name} className="w-16 h-16 object-cover rounded-xl" />
                       <div className="flex-grow">
                         <h4 className="font-bold text-sm text-gray-900">{item.name}</h4>
                         <span className="text-xs font-black text-blue-600">TZS {Number(item.price).toLocaleString()}</span>
