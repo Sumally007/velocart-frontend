@@ -48,7 +48,7 @@ function App() {
     setCart([...cart, product]);
   };
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
   const handlePayment = async () => {
     if (!phoneNumber) return alert("Please enter your phone number!");
@@ -149,7 +149,7 @@ function App() {
                   <h3 className="font-bold text-gray-900 mb-1 tracking-tight group-hover:text-blue-600 transition-colors">{item.name}</h3>
                   <p className="text-xs text-gray-500 line-clamp-2 mb-4 flex-grow">{item.description}</p>
                   <div className="flex justify-between items-center pt-4 border-t border-gray-50">
-                    <span className="text-base font-black text-gray-900">TZS {item.price.toLocaleString()}</span>
+                    <span className="text-base font-black text-gray-900">TZS {Number(item.price).toLocaleString()}</span>
                     <button onClick={() => addToCart(item)} className="bg-blue-600 hover:bg-blue-700 text-white w-10 h-10 rounded-xl font-bold flex items-center justify-center transition-all shadow-xs">+</button>
                   </div>
                 </div>
@@ -211,7 +211,7 @@ function App() {
                       <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-xl" />
                       <div className="flex-grow">
                         <h4 className="font-bold text-sm text-gray-900">{item.name}</h4>
-                        <span className="text-xs font-black text-blue-600">TZS {item.price.toLocaleString()}</span>
+                        <span className="text-xs font-black text-blue-600">TZS {Number(item.price).toLocaleString()}</span>
                       </div>
                     </div>
                   ))}
