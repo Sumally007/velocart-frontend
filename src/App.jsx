@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -6,9 +8,18 @@ function App() {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState(''); // '', 'sending', 'sent', 'success', 'error'
+  
+  const [view, setView] = useState('home');
+  const [user, setUser] = useState(null);
 
-  // 1. Mfumo wa kutafuta bidhaa live kutoka backend (Port 5001)
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -23,7 +34,6 @@ function App() {
       }
     };
 
-    // Debouncing ya 300ms kuzuia seva isilemewe mteja anapochapa
     const delayDebounce = setTimeout(() => {
       fetchProducts();
     }, 300);
@@ -38,7 +48,7 @@ function App() {
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
 
   const handlePayment = async () => {
-    if (!phoneNumber) return alert("Tafadhali ingiza namba ya simu!");
+    if (!phoneNumber) return alert("Please enter your phone number!");
     setPaymentStatus('sending');
     try {
       const res = await fetch('http://localhost:5001/api/pay', {
@@ -46,21 +56,53 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: totalPrice, phone: phoneNumber })
       });
-      if (res.ok) setPaymentStatus('sent');
+      if (res.ok) {
+        setPaymentStatus('sent');
+        
+        // BAADA YA SEKUNDE 3: Inabadilika na kuonyesha taarifa kamili za risiti
+        setTimeout(() => {
+          setPaymentStatus('success');
+        }, 3000);
+      }
     } catch (err) {
       setPaymentStatus('error');
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    alert('Logged out successfully!');
+  };
+
+  if (view === 'login') {
+    return (
+      <div>
+        <Login onNavigate={setView} onLoginSuccess={(userData) => { setUser(userData); setView('home'); }} />
+      </div>
+    );
+  }
+
+  if (view === 'register') {
+    return (
+      <div>
+        <Register onNavigate={setView} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       {/* NAVBAR */}
       <nav className="bg-white border-b sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-xs">
-        <div className="flex items-center space-x-2 font-black text-2xl text-blue-600 tracking-tight">
+        <div 
+          onClick={() => setView('home')} 
+          className="flex items-center space-x-2 font-black text-2xl text-blue-600 tracking-tight cursor-pointer"
+        >
           <span>⚡</span> <span>VeloCart</span>
         </div>
         
-        {/* INPUT YA SEARCH ILIYOPIGILIWA LOCK NA REACT STATE */}
+        {/* SEARCH INPUT */}
         <div className="w-full max-w-xl mx-8 relative">
           <input
             type="text"
@@ -75,9 +117,40 @@ function App() {
           )}
         </div>
 
-        <button onClick={() => setIsCartOpen(true)} className="relative p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all">
-          🛍️ {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{cart.length}</span>}
-        </button>
+        {/* AUTH SECTION */}
+        <div className="flex items-center space-x-4">
+          {user ? (
+            <div className="flex items-center space-x-3">
+              <span className="text-sm font-semibold text-gray-700">Hi, {user.name}</span>
+              <button 
+                onClick={handleLogout} 
+                className="text-xs bg-red-500 hover:bg-red-600 text-white font-bold py-1.5 px-3 rounded-lg transition-all"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => setView('login')} 
+                className="text-sm font-bold text-gray-600 hover:text-blue-600 transition-all"
+              >
+                Sign In
+              </button>
+              <span className="text-gray-300">|</span>
+              <button 
+                onClick={() => setView('register')} 
+                className="text-sm font-bold bg-blue-600 text-white py-1.5 px-3 rounded-lg hover:bg-blue-700 transition-all"
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
+
+          <button onClick={() => setIsCartOpen(true)} className="relative p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all">
+            🛍️ {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{cart.length}</span>}
+          </button>
+        </div>
       </nav>
 
       {/* BANNER */}
@@ -94,7 +167,7 @@ function App() {
 
         {products.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-dashed text-gray-400 font-medium">
-            Samahani, hakuna bidhaa inayolingana na "{searchTerm}"
+            Sorry, no products match "{searchTerm}"
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -125,17 +198,55 @@ function App() {
           <div className="w-full max-w-md bg-white h-full p-6 flex flex-col shadow-2xl">
             <div className="flex justify-between items-center pb-4 border-b">
               <h3 className="text-lg font-black tracking-tight">Shopping Bag</h3>
-              <button onClick={() => setIsCartOpen(false)} className="text-xl text-gray-400 hover:text-gray-600">✕</button>
+              <button onClick={() => { setIsCartOpen(false); if(paymentStatus==='success') { setCart([]); setPaymentStatus(''); } }} className="text-xl text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
             {paymentStatus === 'sent' ? (
+              /* SCREEN YA KWANZA: ALAMA YA KIJANI YA PUSH SENT */
               <div className="flex-grow flex flex-col items-center justify-center text-center p-6">
                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl font-bold mb-4">✓</div>
                 <h4 className="text-xl font-black text-gray-900 mb-1">Push Request Sent!</h4>
                 <p className="text-xs text-gray-500">Check your phone to authorize TZS {totalPrice.toLocaleString()} for VeloCart TZ.</p>
-                <button onClick={() => { setCart([]); setPaymentStatus(''); setIsCartOpen(false); }} className="mt-6 text-sm text-blue-600 font-bold hover:underline">Keep Shopping</button>
+              </div>
+            ) : paymentStatus === 'success' ? (
+              /* SCREEN YA PILI (BAADA YA SEKUNDE 3): RISITI KAMILI YENYE TAARIFA */
+              <div className="flex-grow flex flex-col justify-between p-4">
+                <div className="space-y-6 mt-8">
+                  <div className="text-center">
+                    <div className="inline-block p-3 bg-blue-100 text-blue-600 rounded-full text-2xl mb-2">💳</div>
+                    <h4 className="text-xl font-black text-gray-900">Payment Successful!</h4>
+                    <p className="text-xs text-gray-400">Thank you for shopping with VeloCart</p>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Customer:</span>
+                      <span className="font-bold text-gray-800">{user ? user.name : 'Guest Customer'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Phone Number:</span>
+                      <span className="font-mono font-bold text-gray-800">{phoneNumber}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Status:</span>
+                      <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Paid</span>
+                    </div>
+                    <div className="border-t pt-3 flex justify-between text-base font-black">
+                      <span>Amount Paid:</span>
+                      <span className="text-blue-600">TZS {totalPrice.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => { setCart([]); setPaymentStatus(''); setIsCartOpen(false); }} 
+                  className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-xl transition-all text-sm"
+                >
+                  Keep Shopping
+                </button>
               </div>
             ) : (
+              /* STANDARD BAG VIEW */
               <>
                 <div className="flex-grow overflow-y-auto py-4 space-y-4">
                   {cart.length === 0 ? (
@@ -160,7 +271,7 @@ function App() {
                       <span>TZS {totalPrice.toLocaleString()}</span>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Namba ya Simu</label>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Phone Number</label>
                       <input
                         type="text"
                         placeholder="07xxxxxxxx"
@@ -170,7 +281,7 @@ function App() {
                       />
                     </div>
                     <button onClick={handlePayment} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-all text-sm">
-                      {paymentStatus === 'sending' ? 'Inatuma Push...' : `Lipia TZS ${totalPrice.toLocaleString()}`}
+                      {paymentStatus === 'sending' ? 'Sending Push...' : `Pay TZS ${totalPrice.toLocaleString()}`}
                     </button>
                   </div>
                 )}
