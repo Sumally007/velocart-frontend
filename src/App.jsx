@@ -80,7 +80,7 @@ function App() {
   }
 
   return (
-            <div className="bg-[#0f172a] rounded-[2rem] p-12 md:p-20 mb-12 text-left shadow-2xl relative overflow-hidden border border-slate-800">
+                    <div className="bg-[#0f172a] rounded-[2rem] p-12 md:p-20 mb-12 text-left shadow-2xl relative overflow-hidden border border-slate-800">
           <div className="relative z-10">
             <h1 className="text-5xl md:text-8xl font-extrabold text-white mb-6 tracking-tighter">
               VeloCart <span className="text-cyan-400">Tanzania</span>
@@ -89,6 +89,9 @@ function App() {
               Lightning-Fast • Locally Integrated • Mobile-First E-Commerce
             </p>
           </div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full"></div>
+        </div>
           {/* Hii inaongeza urembo wa mwanga kwa mbali (glow effect) */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full"></div>
