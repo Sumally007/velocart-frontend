@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-// Mfumo unaji-adjust wenyewe: ukiwa live unachukua VITE_API_URL, ukiwa local unachukua localhost
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 function App() {
@@ -11,8 +10,8 @@ function App() {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState(''); 
-  
+  const [paymentStatus, setPaymentStatus] = useState('');
+
   const [view, setView] = useState('home');
   const [user, setUser] = useState(null);
 
@@ -50,7 +49,7 @@ function App() {
 
   const totalPrice = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
-    const handlePayment = async () => {
+  const handlePayment = async () => {
     if (!phoneNumber) return alert("Please enter your phone number!");
     setPaymentStatus("sending");
     try {
@@ -80,7 +79,44 @@ function App() {
   }
 
   return (
-                    <div className="bg-[#0f172a] rounded-[2rem] p-12 md:p-20 mb-12 text-left shadow-2xl relative overflow-hidden border border-slate-800">
+    <div className="min-h-screen bg-gray-50 text-gray-900 pb-12">
+      {/* NAVBAR */}
+      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+          <div className="flex items-center gap-6">
+            <span onClick={() => setView('home')} className="text-xl font-black tracking-tight cursor-pointer text-gray-900">
+              Velo<span className="text-blue-600">Cart</span>
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search marketplace..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+              className="hidden sm:block w-64 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 font-medium"
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-bold text-gray-700">Hi, {user.name}</span>
+                <button onClick={handleLogout} className="text-xs font-bold text-red-600 hover:text-red-700">Logout</button>
+              </div>
+            ) : (
+              <button onClick={() => setView('login')} className="text-sm font-bold text-gray-700 hover:text-blue-600">Login / Sign Up</button>
+            )}
+            <button 
+              onClick={() => setIsCartOpen(true)} 
+              className="bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all"
+            >
+              Bag <span>({cart.length})</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+        {/* BRAND BANNER */}
+        <div className="bg-[#0f172a] rounded-[2rem] p-12 md:p-20 mb-12 text-left shadow-2xl relative overflow-hidden border border-slate-800">
           <div className="relative z-10">
             <h1 className="text-5xl md:text-8xl font-extrabold text-white mb-6 tracking-tighter">
               VeloCart <span className="text-cyan-400">Tanzania</span>
@@ -92,13 +128,8 @@ function App() {
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full"></div>
         </div>
-          {/* Hii inaongeza urembo wa mwanga kwa mbali (glow effect) */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full"></div>
-        </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* ACTIVE CATALOG */}
         <h2 className="text-2xl font-black tracking-tight mb-8">📦 Active Catalog</h2>
         {products.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-dashed text-gray-400 font-medium">
@@ -125,13 +156,13 @@ function App() {
         )}
       </div>
 
-      {/* DRAWERS */}
+      {/* SHOPPING CART DRAWER */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black bg-opacity-40 backdrop-blur-xs">
           <div className="w-full max-w-md bg-white h-full p-6 flex flex-col shadow-2xl">
             <div className="flex justify-between items-center pb-4 border-b">
               <h3 className="text-lg font-black tracking-tight">Shopping Bag</h3>
-              <button onClick={() => { setIsCartOpen(false); if(paymentStatus==='success') { setCart([]); setPaymentStatus(''); } }} className="text-xl text-gray-400 hover:text-gray-600">✕</button>
+              <button onClick={() => { setIsCartOpen(false); if (paymentStatus === 'success') { setCart([]); setPaymentStatus(''); } }} className="text-xl text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
             {paymentStatus === 'sent' ? (
@@ -163,7 +194,7 @@ function App() {
                     </div>
                     <div className="border-t pt-3 flex justify-between text-base font-black">
                       <span>Amount Paid:</span>
-                      <span className="text-blue-600">TZS {totalPrice.toLocaleString()}</span>
+                      <span>TZS {totalPrice.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
