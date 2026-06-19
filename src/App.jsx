@@ -52,21 +52,16 @@ function App() {
 
   const handlePayment = async () => {
     if (!phoneNumber) return alert("Please enter your phone number!");
-    setPaymentStatus('sending');
+    setPaymentStatus("sending");
     try {
-      const res = await fetch(`${API_BASE_URL}/api/pay`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: totalPrice, phone: phoneNumber })
-      });
-      if (res.ok) {
-        setPaymentStatus('sent');
+      setTimeout(() => {
+        setPaymentStatus("sent");
         setTimeout(() => {
-          setPaymentStatus('success');
+          setPaymentStatus("success");
         }, 3000);
-      }
+      }, 1500);
     } catch (err) {
-      setPaymentStatus('error');
+      setPaymentStatus("error");
     }
   };
 
