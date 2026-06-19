@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function Login({ onNavigate, onLoginSuccess }) {
+export default function Login({ onNavigate, onLoginSuccess, API_BASE_URL }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,17 +10,14 @@ export default function Login({ onNavigate, onLoginSuccess }) {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-      }
+      if (!response.ok) throw new Error(data.message || 'Something went wrong');
 
       localStorage.setItem('user', JSON.stringify(data.user));
       alert('Login successful!');
@@ -42,36 +39,15 @@ export default function Login({ onNavigate, onLoginSuccess }) {
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Email Address</label>
-            <input
-              type="email"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500"
-              placeholder="name@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input type="email" required className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500" placeholder="name@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input type="password" required className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <button type="submit" className="w-full rounded-lg bg-blue-600 p-2.5 font-semibold text-white hover:bg-blue-700 transition">
-            Sign In
-          </button>
+          <button type="submit" className="w-full rounded-lg bg-blue-600 p-2.5 font-semibold text-white hover:bg-blue-700 transition">Sign In</button>
         </form>
-        <p className="text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <button onClick={() => onNavigate('register')} className="font-semibold text-blue-600 hover:underline">
-            Register here
-          </button>
-        </p>
+        <p className="text-center text-sm text-gray-600">Don't have an account? <button onClick={() => onNavigate('register')} className="font-semibold text-blue-600 hover:underline">Register here</button></p>
       </div>
     </div>
   );

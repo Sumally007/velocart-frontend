@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function Register({ onNavigate }) {
+export default function Register({ onNavigate, API_BASE_URL }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,17 +11,14 @@ export default function Register({ onNavigate }) {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
+      if (!response.ok) throw new Error(data.message || 'Registration failed');
 
       alert('Successfully registered! You can now log in.');
       onNavigate('login');
@@ -42,47 +39,19 @@ export default function Register({ onNavigate }) {
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input
-              type="text"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <input type="text" required className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Email Address</label>
-            <input
-              type="email"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500"
-              placeholder="name@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input type="email" required className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500" placeholder="name@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input type="password" required className="mt-1 w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <button type="submit" className="w-full rounded-lg bg-green-600 p-2.5 font-semibold text-white hover:bg-green-700 transition">
-            Sign Up
-          </button>
+          <button type="submit" className="w-full rounded-lg bg-green-600 p-2.5 font-semibold text-white hover:bg-green-700 transition">Sign Up</button>
         </form>
-        <p className="text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <button onClick={() => onNavigate('login')} className="font-semibold text-blue-600 hover:underline">
-            Login here
-          </button>
-        </p>
+        <p className="text-center text-sm text-gray-600">Already have an account? <button onClick={() => onNavigate('login')} className="font-semibold text-blue-600 hover:underline">Login here</button></p>
       </div>
     </div>
   );
