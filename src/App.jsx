@@ -50,7 +50,7 @@ function App() {
 
   const totalPrice = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
-  const handlePayment = async () => {
+    const handlePayment = async () => {
     if (!phoneNumber) return alert("Please enter your phone number!");
     setPaymentStatus("sending");
     try {
