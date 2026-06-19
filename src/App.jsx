@@ -80,50 +80,18 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      {/* NAVBAR */}
-      <nav className="bg-white border-b sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-xs">
-        <div onClick={() => setView('home')} className="flex items-center space-x-2 font-black text-2xl text-blue-600 tracking-tight cursor-pointer">
-          <span>⚡</span> <span>VeloCart</span>
-        </div>
-        
-        <div className="w-full max-w-xl mx-8 relative">
-          <input
-            type="text"
-            placeholder="Search products, brands..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-100 border border-transparent rounded-lg focus:outline-none focus:bg-white focus:border-blue-500 transition-all text-sm"
-          />
-          <span className="absolute left-3 top-2.5 text-gray-400 text-sm">🔍</span>
-          {searchTerm && <button onClick={() => setSearchTerm('')} className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 text-xs">✕</button>}
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {user ? (
-            <div className="flex items-center space-x-3">
-              <span className="text-sm font-semibold text-gray-700">Hi, {user.name}</span>
-              <button onClick={handleLogout} className="text-xs bg-red-500 hover:bg-red-600 text-white font-bold py-1.5 px-3 rounded-lg transition-all">Logout</button>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <button onClick={() => setView('login')} className="text-sm font-bold text-gray-600 hover:text-blue-600 transition-all">Sign In</button>
-              <span className="text-gray-300">|</span>
-              <button onClick={() => setView('register')} className="text-sm font-bold bg-blue-600 text-white py-1.5 px-3 rounded-lg hover:bg-blue-700 transition-all">Sign Up</button>
-            </div>
-          )}
-
-          <button onClick={() => setIsCartOpen(true)} className="relative p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all">
-            🛍️ {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{cart.length}</span>}
-          </button>
-        </div>
-      </nav>
-
-      {/* CATALOG */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden flex flex-col justify-center min-h-[200px]">
-          <h1 className="text-4xl font-black tracking-tight mb-2">REAL-TIME COMMERCE.</h1>
-          <p className="text-blue-100 text-sm font-medium">Connected to Cloud PostgreSQL database smoothly.</p>
+            <div className="bg-[#0f172a] rounded-[2rem] p-12 md:p-20 mb-12 text-left shadow-2xl relative overflow-hidden border border-slate-800">
+          <div className="relative z-10">
+            <h1 className="text-5xl md:text-8xl font-extrabold text-white mb-6 tracking-tighter">
+              VeloCart <span className="text-cyan-400">Tanzania</span>
+            </h1>
+            <p className="text-slate-400 text-sm md:text-xl font-medium tracking-[0.1em] md:tracking-[0.25em] uppercase">
+              Lightning-Fast • Locally Integrated • Mobile-First E-Commerce
+            </p>
+          </div>
+          {/* Hii inaongeza urembo wa mwanga kwa mbali (glow effect) */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full"></div>
         </div>
       </div>
 
